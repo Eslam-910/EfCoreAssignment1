@@ -1,0 +1,33 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using EfCoreAssignment1.Configurations;
+using EfCoreAssignment1.Entities;
+using Microsoft.EntityFrameworkCore;
+
+namespace EfCoreAssignment1.Contexts
+{
+    internal class AppDbContext:DbContext
+    {
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer("Server=.;Database=APPG02;Trusted_Connection=True;TrustServerCertificate=True;");
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new StudentConfiguration());
+            modelBuilder.ApplyConfiguration(new StudCoursesConfiguration());
+            base.OnModelCreating(modelBuilder);
+        }
+        public DbSet<Student> Students { get; set; }
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<Topic> Topics { get; set; }
+        public DbSet<Instructor> Instructors { get; set; }
+        public DbSet<courseInst> CourseInsts { get; set; }
+        public DbSet<Stud_Course> Stud_Courses { get; set; }
+        public DbSet<Course> Courses { get; set; }
+
+    }
+}
