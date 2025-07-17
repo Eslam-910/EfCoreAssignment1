@@ -10,10 +10,9 @@ namespace EfCoreAssignment1.Entities
 {
     internal class courseInst
     {
-        [Key]
-        public int Inst_Id { get; set; }
-        //[ForeignKey("Course_Id")]
-        public int Course_Id { get; set; }
+        
+        public int InstructorId { get; set; }
+        public int CourseId { get; set; }
         public string Evaluate { get; set; }
     }
 }

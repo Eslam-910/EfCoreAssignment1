@@ -16,7 +16,9 @@ namespace EfCoreAssignment1.Entities
         public string LName { get; set; }
         public string? Address { get; set; }
         public int? Age { get; set; }
-        //[ForeignKey("Dept_Id")]
-        public Department Dept_Id { get; set; }
+       
+        public int? D_Id { get; set; }
+        public Department? Dept_Id { get; set; }
+        public List<Student_Course> Courses { get; set; }
     }
 }

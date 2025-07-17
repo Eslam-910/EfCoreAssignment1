@@ -15,8 +15,9 @@ namespace EfCoreAssignment1.Entities
         public double Salary { get; set; }
         public string Address { get; set; }
         public int HourRate { get; set; }
-       // [ForeignKey("Dept_Id")]
-        public int Dept_Id { get; set; }
+        public int D_Id { get; set; }
+        public Department department { get; set; }
+        public List<courseInst> Courses { get; set; }
 
     }
 }

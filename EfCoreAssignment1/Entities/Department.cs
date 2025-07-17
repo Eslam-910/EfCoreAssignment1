@@ -13,8 +13,9 @@ namespace EfCoreAssignment1.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
-       // [ForeignKey("Ins_Id")]
-        public Instructor Ins_Id { get; set; }
+        public List<Student> Students { get; set; }
         public DateTime HirringDate { get; set; }
+        public int Ins_Id { get; set; }
+        public List<Instructor> Instructor { get; set; }
     }
 }

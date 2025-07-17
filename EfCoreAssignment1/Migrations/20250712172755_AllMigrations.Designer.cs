@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EfCoreAssignment1.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250708190621_Initial Create")]
-    partial class InitialCreate
+    [Migration("20250712172755_AllMigrations")]
+    partial class AllMigrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,7 +44,12 @@ namespace EfCoreAssignment1.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Top_Id")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("Top_Id");
 
                     b.ToTable("Courses");
                 });
@@ -60,7 +65,7 @@ namespace EfCoreAssignment1.Migrations
                     b.Property<DateTime>("HirringDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Ins_IdId")
+                    b.Property<int>("Ins_Id")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -68,8 +73,6 @@ namespace EfCoreAssignment1.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Ins_IdId");
 
                     b.ToTable("Departments");
                 });
@@ -89,7 +92,7 @@ namespace EfCoreAssignment1.Migrations
                     b.Property<double>("Bonus")
                         .HasColumnType("float");
 
-                    b.Property<int>("Dept_Id")
+                    b.Property<int>("D_Id")
                         .HasColumnType("int");
 
                     b.Property<int>("HourRate")
@@ -104,28 +107,9 @@ namespace EfCoreAssignment1.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("D_Id");
+
                     b.ToTable("Instructors");
-                });
-
-            modelBuilder.Entity("EfCoreAssignment1.Entities.Stud_Course", b =>
-                {
-                    b.Property<int>("Stud_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Stud_Id"));
-
-                    b.Property<int>("Course_IdId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Grad")
-                        .HasColumnType("int");
-
-                    b.HasKey("Stud_Id");
-
-                    b.HasIndex("Course_IdId");
-
-                    b.ToTable("Stud_Courses");
                 });
 
             modelBuilder.Entity("EfCoreAssignment1.Entities.Student", b =>
@@ -145,7 +129,7 @@ namespace EfCoreAssignment1.Migrations
                         .HasColumnType("int")
                         .HasColumnName("Student Age");
 
-                    b.Property<int>("Dept_IdId")
+                    b.Property<int>("D_Id")
                         .HasColumnType("int");
 
                     b.Property<string>("FName")
@@ -160,9 +144,27 @@ namespace EfCoreAssignment1.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Dept_IdId");
+                    b.HasIndex("D_Id");
 
                     b.ToTable("Students");
+                });
+
+            modelBuilder.Entity("EfCoreAssignment1.Entities.Student_Course", b =>
+                {
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Grad")
+                        .HasColumnType("float");
+
+                    b.HasKey("StudentId", "CourseId");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("Student_Courses");
                 });
 
             modelBuilder.Entity("EfCoreAssignment1.Entities.Topic", b =>
@@ -184,55 +186,113 @@ namespace EfCoreAssignment1.Migrations
 
             modelBuilder.Entity("EfCoreAssignment1.Entities.courseInst", b =>
                 {
-                    b.Property<int>("Inst_Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("CourseId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Inst_Id"));
-
-                    b.Property<int>("Course_Id")
+                    b.Property<int>("InstructorId")
                         .HasColumnType("int");
 
                     b.Property<string>("Evaluate")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Inst_Id");
+                    b.HasKey("CourseId", "InstructorId");
 
-                    b.ToTable("CourseInsts");
+                    b.HasIndex("InstructorId");
+
+                    b.ToTable("CourseInstructor");
                 });
 
-            modelBuilder.Entity("EfCoreAssignment1.Entities.Department", b =>
+            modelBuilder.Entity("EfCoreAssignment1.Entities.Course", b =>
                 {
-                    b.HasOne("EfCoreAssignment1.Entities.Instructor", "Ins_Id")
-                        .WithMany()
-                        .HasForeignKey("Ins_IdId")
+                    b.HasOne("EfCoreAssignment1.Entities.Topic", "Topic")
+                        .WithMany("Courses")
+                        .HasForeignKey("Top_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Ins_Id");
+                    b.Navigation("Topic");
                 });
 
-            modelBuilder.Entity("EfCoreAssignment1.Entities.Stud_Course", b =>
+            modelBuilder.Entity("EfCoreAssignment1.Entities.Instructor", b =>
                 {
-                    b.HasOne("EfCoreAssignment1.Entities.Course", "Course_Id")
-                        .WithMany()
-                        .HasForeignKey("Course_IdId")
+                    b.HasOne("EfCoreAssignment1.Entities.Department", "department")
+                        .WithMany("Instructor")
+                        .HasForeignKey("D_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Course_Id");
+                    b.Navigation("department");
                 });
 
             modelBuilder.Entity("EfCoreAssignment1.Entities.Student", b =>
                 {
                     b.HasOne("EfCoreAssignment1.Entities.Department", "Dept_Id")
-                        .WithMany()
-                        .HasForeignKey("Dept_IdId")
+                        .WithMany("Students")
+                        .HasForeignKey("D_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Dept_Id");
+                });
+
+            modelBuilder.Entity("EfCoreAssignment1.Entities.Student_Course", b =>
+                {
+                    b.HasOne("EfCoreAssignment1.Entities.Course", null)
+                        .WithMany("Students")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EfCoreAssignment1.Entities.Student", null)
+                        .WithMany("Courses")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("EfCoreAssignment1.Entities.courseInst", b =>
+                {
+                    b.HasOne("EfCoreAssignment1.Entities.Course", null)
+                        .WithMany("Instructors")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EfCoreAssignment1.Entities.Instructor", null)
+                        .WithMany("Courses")
+                        .HasForeignKey("InstructorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("EfCoreAssignment1.Entities.Course", b =>
+                {
+                    b.Navigation("Instructors");
+
+                    b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("EfCoreAssignment1.Entities.Department", b =>
+                {
+                    b.Navigation("Instructor");
+
+                    b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("EfCoreAssignment1.Entities.Instructor", b =>
+                {
+                    b.Navigation("Courses");
+                });
+
+            modelBuilder.Entity("EfCoreAssignment1.Entities.Student", b =>
+                {
+                    b.Navigation("Courses");
+                });
+
+            modelBuilder.Entity("EfCoreAssignment1.Entities.Topic", b =>
+                {
+                    b.Navigation("Courses");
                 });
 #pragma warning restore 612, 618
         }

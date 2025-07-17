@@ -8,13 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EfCoreAssignment1.Entities
 {
-    internal class Stud_Course
+    internal class Student_Course
     {
-        //  [ForeignKey("Stud_Id")]
-        
-        public int Stud_Id { get; set; }
-       // [ForeignKey("Course_Id")]
-        public Course Course_Id { get; set; }
-        public int Grad { get; set; }
+        public int StudentId { get; set; }
+        public int CourseId { get; set; }
+        public double Grad { get; set; }
     }
 }
